@@ -2,3 +2,4 @@ node_modules
 *yarn.lock
 coverage
 *.sqlite
+Billed-app-FR-Back/public
