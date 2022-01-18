@@ -56,7 +56,7 @@ export const bills = [{
   "vat": "40",
   "fileName": "preview-facture-free-201801-pdf-1.jpg",
   "date": "2002-02-02",
-  "date": "02 Fév. 02",
+  "formatedDate": "02 Fév. 02",
   "commentAdmin": "pas la bonne facture",
   "commentary": "test2",
   "type": "Restaurants et bars",
