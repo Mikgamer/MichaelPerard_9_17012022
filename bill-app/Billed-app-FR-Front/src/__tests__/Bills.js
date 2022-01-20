@@ -3,16 +3,14 @@
  */
 
 import { prettyDOM, screen } from "@testing-library/dom"
+import userEvent from '@testing-library/user-event'
 import BillsUI from "../views/BillsUI.js"
 import { bills } from "../fixtures/bills.js"
-// Simulate localStorage
-import { localStorageMock } from "../__mocks__/localStorage.js";
-// Store data
+import Bills from "../containers/Bills.js"
+import { localStorageMock } from "../__mocks__/localStorage.js"
 import store from "../__mocks__/store"
-// Get generic path (if path modified, test will still work)
-import { ROUTES_PATH } from "../constants/routes.js"
-// Generate page
-import Router from "../app/Router.js";
+import { ROUTES, ROUTES_PATH } from "../constants/routes.js"
+import Router from "../app/Router.js"
 
 // Setup localstorage and window with its location hash
 Object.defineProperty(window, "localStorage", {value: localStorageMock});
@@ -39,10 +37,38 @@ describe("Given I am connected as an employee", () => {
     test("Then bills should be ordered from earliest to latest", () => {
       const html = BillsUI({ data: bills })
       document.body.innerHTML = html
+
       const dates = screen.getAllByText(/^[0-3]\d .+\. \d\d$/i).map(a => a.dataset.date)
       const antiChrono = (a, b) => ((a < b) ? 1 : -1)
       const datesSorted = dates.sort(antiChrono)
       expect(dates).toEqual(datesSorted)
+    })
+    test("Then all open bill icons should display modal when you click on it", () => {
+      const html = BillsUI({ data: bills })
+      document.body.innerHTML = html
+      const currentBills = new Bills ({ document, onNavigate, store: store, localStorage: localStorage })
+
+      $.fn.modal = jest.fn();
+      const spyModal = jest.spyOn($.fn, "modal")
+
+
+      const eyeIcons = screen.getAllByTestId("icon-eye")
+      eyeIcons.map(eyeIcon => { userEvent.click(eyeIcon) })
+      expect(spyModal).toHaveBeenCalledTimes(4)
+    })
+    test("Then adding a new bill should load newbills page", () => {
+      const html = BillsUI({ data: bills })
+      document.body.innerHTML = html
+      const onNavigate = (pathname) => { document.body.innerHTML = ROUTES({ pathname }) }
+      const currentBills = new Bills({ document, onNavigate, store: store, localStorage: localStorage })
+
+      const handleClickNewBill = jest.fn((e) => currentBills.handleClickNewBill(e))
+      const newBills = screen.getByTestId("btn-new-bill")
+      newBills.addEventListener('click', handleClickNewBill)
+      userEvent.click(newBills)
+
+      const formNewBill = screen.getByTestId("form-new-bill")
+      expect(formNewBill).toBeTruthy()
     })
   })
 })
