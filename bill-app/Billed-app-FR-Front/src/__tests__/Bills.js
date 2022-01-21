@@ -17,14 +17,14 @@ Object.defineProperty(window, "localStorage", {value: localStorageMock});
 Object.defineProperty(window, "location", { value: { hash: "" } });
 
 describe("Given I am connected as an employee", () => {
-  // Set localstorage user type to employee
-  window.localStorage.setItem( "user", JSON.stringify({type: "Employee"}) );
 
   describe("When I am on Bills Page", () => { 
-    // Set location to Bills Page
-    window.location.hash = ROUTES_PATH["Bills"]
 
     test("Then bill icon in vertical layout should be highlighted", () => {
+      // Set localstorage user type to employee
+      window.localStorage.setItem( "user", JSON.stringify({type: "Employee"}) );
+      // Set location to Bills Page
+      window.location.hash = ROUTES_PATH["Bills"]
       // Set root for the router function to work 
       const root = "<div id='root'></div>"
       document.body.innerHTML = root
@@ -34,6 +34,7 @@ describe("Given I am connected as an employee", () => {
       const isBillIconActive = screen.getByTestId("icon-window").classList.contains("active-icon")
       expect(isBillIconActive).toBe(true)
     })
+
     test("Then bills should be ordered from earliest to latest", () => {
       const html = BillsUI({ data: bills })
       document.body.innerHTML = html
@@ -43,10 +44,12 @@ describe("Given I am connected as an employee", () => {
       const datesSorted = dates.sort(antiChrono)
       expect(dates).toEqual(datesSorted)
     })
+
     test("Then all open bill icons should display modal when you click on it", () => {
+      window.localStorage.setItem( "user", JSON.stringify({type: "Employee"}) );
       const html = BillsUI({ data: bills })
       document.body.innerHTML = html
-      const currentBills = new Bills ({ document, onNavigate, store: store, localStorage: localStorage })
+      const currentBills = new Bills ({ document, onNavigate, store: store, localStorage: window.localStorage })
 
       $.fn.modal = jest.fn();
       const spyModal = jest.spyOn($.fn, "modal")
@@ -56,11 +59,13 @@ describe("Given I am connected as an employee", () => {
       eyeIcons.map(eyeIcon => { userEvent.click(eyeIcon) })
       expect(spyModal).toHaveBeenCalledTimes(4)
     })
-    test("Then adding a new bill should load newbills page", () => {
+
+    test("Then adding a new bill should load newbill page", () => {
+      window.localStorage.setItem( "user", JSON.stringify({type: "Employee"}) );
       const html = BillsUI({ data: bills })
       document.body.innerHTML = html
       const onNavigate = (pathname) => { document.body.innerHTML = ROUTES({ pathname }) }
-      const currentBills = new Bills({ document, onNavigate, store: store, localStorage: localStorage })
+      const currentBills = new Bills({ document, onNavigate, store: store, localStorage: window.localStorage })
 
       const handleClickNewBill = jest.fn((e) => currentBills.handleClickNewBill(e))
       const newBills = screen.getByTestId("btn-new-bill")
