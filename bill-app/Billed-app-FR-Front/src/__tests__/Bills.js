@@ -80,7 +80,7 @@ describe("Given I am connected as an employee", () => {
 
 // test d'intégration GET
 describe("Given I am a user connected as an employee", () => {
-  describe("When I navigate to Dashboard", () => {
+  describe("When I navigate to Bills", () => {
     test("fetches bills from mock API GET", async () => {
        const getSpy = jest.spyOn(store, "get")
        const bills = await store.get()

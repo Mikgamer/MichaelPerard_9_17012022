@@ -55,3 +55,15 @@ describe("Given I am connected as an employee", () => {
     })
   })
 })
+
+
+// test d'intégration POST
+describe("Given I am a user connected as an employee", () => {
+  describe("When I navigate to NewBill", () => {
+    test("send a new bill from mock API POST", async () => {
+       const getSpy = jest.spyOn(store, "post")
+       await store.post(bills[0])
+       expect(getSpy).toHaveBeenCalledTimes(1)
+    })
+  })
+})
