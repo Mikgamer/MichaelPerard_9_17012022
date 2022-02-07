@@ -4,11 +4,6 @@
 
 ## Comment lancer l'API en local:
 
-### Cloner le projet:
-```
-git clone https://github.com/OpenClassrooms-Student-Center/Billed-app-FR-Back.git
-```
-
 ### Acceder au repertoire du projet :
 ```
 cd Billed-app-FR-Back
@@ -48,12 +43,6 @@ mot de passe : employee
 
 
 ## How to run the API locally :
-
-
-### Clone the projet:
-```
-git clone https://github.com/OpenClassrooms-Student-Center/Billed-app-FR-Back.git
-```
 
 ### Go to the project directory :
 ```
